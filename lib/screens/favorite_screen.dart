@@ -1,19 +1,23 @@
 import 'package:flutter/material.dart';
 
-import '../data/dummy_data.dart';
+import '../services/favorites_manager.dart';
 import '../widgets/app_scaffold.dart';
 import '../widgets/favorite_anime_card.dart';
 
-class FavoriteScreen extends StatelessWidget {
+class FavoriteScreen extends StatefulWidget {
   const FavoriteScreen({super.key});
+
+  @override
+  State<FavoriteScreen> createState() => _FavoriteScreenState();
+}
+
+class _FavoriteScreenState extends State<FavoriteScreen> {
+  String _searchQuery = "";
 
   @override
   Widget build(BuildContext context) {
     final screenWidth = MediaQuery.of(context).size.width;
     final screenHeight = MediaQuery.of(context).size.height;
-
-    // Get one anime from dummy data for display
-    final favoriteAnime = DummyData.animeList.first;
 
     return AppScaffold(
       appBar: AppBar(
@@ -46,6 +50,11 @@ class FavoriteScreen extends StatelessWidget {
                 ],
               ),
               child: TextField(
+                onChanged: (value) {
+                  setState(() {
+                    _searchQuery = value;
+                  });
+                },
                 decoration: InputDecoration(
                   hintText: "Anime Title",
                   hintStyle: TextStyle(
@@ -81,33 +90,58 @@ class FavoriteScreen extends StatelessWidget {
                   color: Colors.white,
                 ),
               ),
-
             ),
-
           ),
 
           SizedBox(height: screenHeight * 0.01),
 
           // Favorite Anime List
-          // Favorite Anime List
           Expanded(
-            child: ListView.builder(
-              padding: EdgeInsets.symmetric(vertical: screenHeight * 0.01),
-              itemCount: 1,
-              itemBuilder: (context, index) {
-                return FavoriteAnimeCard(
-                  title: favoriteAnime.title,
-                  genre: favoriteAnime.genre,
-                  rating: favoriteAnime.rating,
-                  imagePath: favoriteAnime.imagePath,
+            child: ListenableBuilder(
+              listenable: FavoritesManager.instance,
+              builder: (context, _) {
+                final favorites = FavoritesManager.instance.favorites
+                    .where(
+                      (anime) =>
+                          _searchQuery.isEmpty ||
+                          anime.title.toLowerCase().contains(
+                            _searchQuery.toLowerCase(),
+                          ),
+                    )
+                    .toList();
+
+                if (favorites.isEmpty) {
+                  return Center(
+                    child: Text(
+                      FavoritesManager.instance.favorites.isEmpty
+                          ? 'Belum ada anime favorit'
+                          : 'Anime tidak ditemukan',
+                      style: TextStyle(
+                        color: Colors.white.withValues(alpha: 0.7),
+                        fontSize: screenWidth * 0.04,
+                      ),
+                    ),
+                  );
+                }
+
+                return ListView.builder(
+                  padding: EdgeInsets.symmetric(vertical: screenHeight * 0.01),
+                  itemCount: favorites.length,
+                  itemBuilder: (context, index) {
+                    final favoriteAnime = favorites[index];
+                    return FavoriteAnimeCard(
+                      title: favoriteAnime.title,
+                      genre: favoriteAnime.genre,
+                      rating: favoriteAnime.rating,
+                      imagePath: favoriteAnime.imagePath,
+                    );
+                  },
                 );
               },
             ),
           ),
-
         ],
       ),
-
     );
   }
 }

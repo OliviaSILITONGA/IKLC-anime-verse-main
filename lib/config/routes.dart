@@ -6,6 +6,9 @@ import 'package:anime_verse/screens/signup_screen.dart';
 import 'package:anime_verse/widgets/bottom_navigation_shell.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+
+import '../data/dummy_data.dart'; // sesuaikan path-nya
+
 import '../screens/detail_screen.dart';
 
 class AppRoutes {
@@ -19,8 +22,7 @@ class AppRoutes {
 
 final GlobalKey<NavigatorState> _rootNavigatorKey = GlobalKey<NavigatorState>();
 
-GoRouter createRouter(){
-  // routes.dart
+GoRouter createRouter() {
   return GoRouter(
     navigatorKey: _rootNavigatorKey,
     initialLocation: AppRoutes.signIn,
@@ -44,7 +46,8 @@ GoRouter createRouter(){
         parentNavigatorKey: _rootNavigatorKey,
         builder: (context, state) {
           final animeId = state.pathParameters['id'] ?? '';
-          return DetailScreen(animeId: animeId);
+          final anime = DummyData.findById(animeId);
+          return DetailScreen(anime: anime);
         },
       ),
 

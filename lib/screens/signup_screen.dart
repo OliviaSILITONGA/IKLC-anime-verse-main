@@ -1,11 +1,58 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:go_router/go_router.dart';
+
 import '../config/routes.dart';
 import '../widgets/app_scaffold.dart';
 
-class SignUpScreen extends StatelessWidget {
+class SignUpScreen extends StatefulWidget {
   const SignUpScreen({super.key});
+
+  @override
+  State<SignUpScreen> createState() => _SignUpScreenState();
+}
+
+class _SignUpScreenState extends State<SignUpScreen> {
+  final _formKey = GlobalKey<FormState>();
+  final _emailController = TextEditingController();
+  final _passwordController = TextEditingController();
+  bool _obscurePassword = true;
+
+  final _emailRegex = RegExp(r'^[\w.\-]+@([\w\-]+\.)+[\w\-]{2,}$');
+
+  @override
+  void dispose() {
+    _emailController.dispose();
+    _passwordController.dispose();
+    super.dispose();
+  }
+
+  String? _validateEmail(String? value) {
+    if (value == null || value.trim().isEmpty) {
+      return 'Email wajib diisi';
+    }
+    if (!_emailRegex.hasMatch(value.trim())) {
+      return 'Format email tidak valid';
+    }
+    return null;
+  }
+
+  String? _validatePassword(String? value) {
+    if (value == null || value.isEmpty) {
+      return 'Password wajib diisi';
+    }
+    if (value.length < 6) {
+      return 'Password minimal 6 karakter';
+    }
+    return null;
+  }
+
+  void _handleSignUp() {
+    if (_formKey.currentState!.validate()) {
+      // TODO: Implement sign up functionality
+      context.go(AppRoutes.home);
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -13,22 +60,23 @@ class SignUpScreen extends StatelessWidget {
     final screenHeight = MediaQuery.of(context).size.height;
     return AppScaffold(
       body: LayoutBuilder(
-          builder: (context, constraints) {
-            final isLargeScreen = constraints.maxWidth > 600;
-            final maxWidth = isLargeScreen ? 400.0 : constraints.maxWidth;
-            return SingleChildScrollView(
-              child: Center(
-                child: Container(
-                  width: maxWidth,
-                  padding: EdgeInsets.all(screenWidth * 0.06),
+        builder: (context, constraints) {
+          final isLargeScreen = constraints.maxWidth > 600;
+          final maxWidth = isLargeScreen ? 400.0 : constraints.maxWidth;
+          return SingleChildScrollView(
+            child: Center(
+              child: Container(
+                width: maxWidth,
+                padding: EdgeInsets.all(screenWidth * 0.06),
+                child: Form(
+                  key: _formKey,
+                  autovalidateMode: AutovalidateMode.onUserInteraction,
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
-                      // konten sign-up berada di sini
                       SizedBox(height: screenHeight * 0.1),
 
                       // TODO: Add logo here
-
                       SizedBox(height: screenHeight * 0.04),
 
                       // SignUp Title
@@ -57,7 +105,9 @@ class SignUpScreen extends StatelessWidget {
                       SizedBox(height: screenHeight * 0.05),
 
                       // Email TextField
-                      TextField(
+                      TextFormField(
+                        controller: _emailController,
+                        validator: _validateEmail,
                         decoration: InputDecoration(
                           labelText: 'Email',
                           labelStyle: TextStyle(
@@ -67,8 +117,31 @@ class SignUpScreen extends StatelessWidget {
                           filled: true,
                           fillColor: Colors.white.withValues(alpha: 0.1),
                           border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(screenWidth * 0.03),
+                            borderRadius: BorderRadius.circular(
+                              screenWidth * 0.03,
+                            ),
                             borderSide: BorderSide.none,
+                          ),
+                          errorBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(
+                              screenWidth * 0.03,
+                            ),
+                            borderSide: const BorderSide(
+                              color: Colors.redAccent,
+                            ),
+                          ),
+                          focusedErrorBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(
+                              screenWidth * 0.03,
+                            ),
+                            borderSide: const BorderSide(
+                              color: Colors.redAccent,
+                              width: 1.5,
+                            ),
+                          ),
+                          errorStyle: TextStyle(
+                            color: Colors.redAccent.shade100,
+                            fontSize: screenWidth * 0.03,
                           ),
                           prefixIcon: Icon(
                             Icons.email,
@@ -90,7 +163,10 @@ class SignUpScreen extends StatelessWidget {
                       SizedBox(height: screenHeight * 0.02),
 
                       // Password TextField
-                      TextField(
+                      TextFormField(
+                        controller: _passwordController,
+                        validator: _validatePassword,
+                        obscureText: _obscurePassword,
                         decoration: InputDecoration(
                           labelText: 'Password',
                           labelStyle: TextStyle(
@@ -100,18 +176,50 @@ class SignUpScreen extends StatelessWidget {
                           filled: true,
                           fillColor: Colors.white.withValues(alpha: 0.1),
                           border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(screenWidth * 0.03),
+                            borderRadius: BorderRadius.circular(
+                              screenWidth * 0.03,
+                            ),
                             borderSide: BorderSide.none,
+                          ),
+                          errorBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(
+                              screenWidth * 0.03,
+                            ),
+                            borderSide: const BorderSide(
+                              color: Colors.redAccent,
+                            ),
+                          ),
+                          focusedErrorBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(
+                              screenWidth * 0.03,
+                            ),
+                            borderSide: const BorderSide(
+                              color: Colors.redAccent,
+                              width: 1.5,
+                            ),
+                          ),
+                          errorStyle: TextStyle(
+                            color: Colors.redAccent.shade100,
+                            fontSize: screenWidth * 0.03,
                           ),
                           prefixIcon: Icon(
                             Icons.lock_outline,
                             color: Colors.white70,
                             size: screenWidth * 0.06,
                           ),
-                          suffixIcon: Icon(
-                            Icons.visibility_off_outlined,
-                            color: Colors.white70,
-                            size: screenWidth * 0.06,
+                          suffixIcon: IconButton(
+                            icon: Icon(
+                              _obscurePassword
+                                  ? Icons.visibility_off_outlined
+                                  : Icons.visibility_outlined,
+                              color: Colors.white70,
+                              size: screenWidth * 0.06,
+                            ),
+                            onPressed: () {
+                              setState(() {
+                                _obscurePassword = !_obscurePassword;
+                              });
+                            },
                           ),
                           contentPadding: EdgeInsets.symmetric(
                             vertical: screenHeight * 0.025,
@@ -122,26 +230,23 @@ class SignUpScreen extends StatelessWidget {
                           fontSize: screenWidth * 0.04,
                           color: Colors.white,
                         ),
-                        obscureText: true,
                       ),
 
                       SizedBox(height: screenHeight * 0.03),
-
 
                       // Sign Up Button
                       SizedBox(
                         width: double.infinity,
                         height: screenHeight * 0.075,
                         child: ElevatedButton(
-                          onPressed: () {
-                            // TODO: Implement sign up functionality
-                            context.go(AppRoutes.home);
-                          },
+                          onPressed: _handleSignUp,
                           style: ElevatedButton.styleFrom(
                             backgroundColor: Colors.blue.withValues(alpha: 0.8),
                             foregroundColor: Colors.white,
                             shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(screenWidth * 0.03),
+                              borderRadius: BorderRadius.circular(
+                                screenWidth * 0.03,
+                              ),
                             ),
                             elevation: 5,
                           ),
@@ -167,7 +272,9 @@ class SignUpScreen extends StatelessWidget {
                             ),
                           ),
                           Padding(
-                            padding: EdgeInsets.symmetric(horizontal: screenWidth * 0.03),
+                            padding: EdgeInsets.symmetric(
+                              horizontal: screenWidth * 0.03,
+                            ),
                             child: Text(
                               'or',
                               style: TextStyle(
@@ -210,11 +317,10 @@ class SignUpScreen extends StatelessWidget {
                           style: ElevatedButton.styleFrom(
                             backgroundColor: Colors.black45,
                             shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(screenWidth * 0.03),
-                              side: BorderSide(
-                                color: Colors.black45,
-                                width: 1,
+                              borderRadius: BorderRadius.circular(
+                                screenWidth * 0.03,
                               ),
+                              side: BorderSide(color: Colors.black45, width: 1),
                             ),
                             elevation: 3,
                           ),
@@ -236,7 +342,6 @@ class SignUpScreen extends StatelessWidget {
                           ),
                           TextButton(
                             onPressed: () {
-                              // TODO: Navigate to sign in screen
                               context.go(AppRoutes.signIn);
                             },
                             child: Text(
@@ -252,16 +357,13 @@ class SignUpScreen extends StatelessWidget {
                       ),
 
                       SizedBox(height: screenHeight * 0.05),
-
-
                     ],
                   ),
                 ),
-
               ),
-            );
-
-          }
+            ),
+          );
+        },
       ),
     );
   }

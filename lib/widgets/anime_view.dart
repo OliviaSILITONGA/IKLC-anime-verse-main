@@ -1,12 +1,30 @@
 import 'package:flutter/material.dart';
+
 import '../data/dummy_data.dart';
 import 'anime_card.dart';
 
 class AnimeView extends StatelessWidget {
-  const AnimeView({super.key});
+  final String selectedGenre;
+  final String searchQuery;
+
+  const AnimeView({
+    super.key,
+    this.selectedGenre = "All",
+    this.searchQuery = "",
+  });
 
   @override
   Widget build(BuildContext context) {
+    final filteredList = DummyData.animeList.where((anime) {
+      final matchesGenre =
+          selectedGenre == "All" ||
+          anime.genre.toLowerCase().contains(selectedGenre.toLowerCase());
+      final matchesSearch =
+          searchQuery.isEmpty ||
+          anime.title.toLowerCase().contains(searchQuery.toLowerCase());
+      return matchesGenre && matchesSearch;
+    }).toList();
+
     return Padding(
       padding: EdgeInsets.symmetric(
         horizontal: MediaQuery.of(context).size.width * 0.04,
@@ -27,6 +45,23 @@ class AnimeView extends StatelessWidget {
             childAspectRatio = 0.8;
           }
 
+          if (filteredList.isEmpty) {
+            return Padding(
+              padding: EdgeInsets.symmetric(
+                vertical: MediaQuery.of(context).size.height * 0.05,
+              ),
+              child: Center(
+                child: Text(
+                  'Anime tidak ditemukan',
+                  style: TextStyle(
+                    color: Colors.white.withValues(alpha: 0.7),
+                    fontSize: constraints.maxWidth * 0.04,
+                  ),
+                ),
+              ),
+            );
+          }
+
           return GridView.builder(
             shrinkWrap: true,
             physics: const NeverScrollableScrollPhysics(),
@@ -36,9 +71,9 @@ class AnimeView extends StatelessWidget {
               crossAxisSpacing: constraints.maxWidth * 0.05,
               childAspectRatio: childAspectRatio,
             ),
-            itemCount: DummyData.animeList.length,
+            itemCount: filteredList.length,
             itemBuilder: (context, index) {
-              final anime = DummyData.animeList[index];
+              final anime = filteredList[index];
               return AnimeCard(
                 id: anime.id,
                 title: anime.title,
@@ -46,10 +81,8 @@ class AnimeView extends StatelessWidget {
               );
             },
           );
-
         },
       ),
-
     );
   }
 }

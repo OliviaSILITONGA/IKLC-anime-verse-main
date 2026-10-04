@@ -4,8 +4,16 @@ import '../widgets/anime_view.dart';
 import '../widgets/app_scaffold.dart';
 import '../widgets/genre_list.dart';
 
-class HomeScreen extends StatelessWidget {
+class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
+
+  @override
+  State<HomeScreen> createState() => _HomeScreenState();
+}
+
+class _HomeScreenState extends State<HomeScreen> {
+  String _selectedGenre = "All";
+  String _searchQuery = "";
 
   @override
   Widget build(BuildContext context) {
@@ -44,6 +52,11 @@ class HomeScreen extends StatelessWidget {
                   ],
                 ),
                 child: TextField(
+                  onChanged: (value) {
+                    setState(() {
+                      _searchQuery = value;
+                    });
+                  },
                   decoration: InputDecoration(
                     hintText: "Anime Title",
                     hintStyle: TextStyle(
@@ -79,19 +92,22 @@ class HomeScreen extends StatelessWidget {
                     color: Colors.white,
                   ),
                 ),
-
               ),
-
             ),
-            GenreList(),
+            GenreList(
+              selected: _selectedGenre,
+              onGenreSelected: (genre) {
+                setState(() {
+                  _selectedGenre = genre;
+                });
+              },
+            ),
             SizedBox(height: screenHeight * 0.03),
-            const AnimeView(),
+            AnimeView(selectedGenre: _selectedGenre, searchQuery: _searchQuery),
             SizedBox(height: screenHeight * 0.025),
-
           ],
         ),
       ),
     );
-
   }
 }

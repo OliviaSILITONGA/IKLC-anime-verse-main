@@ -18,11 +18,7 @@ class GenreList extends StatelessWidget {
   final String selected;
   final ValueChanged<String>? onGenreSelected;
 
-  const GenreList({
-    super.key,
-    this.selected = "All",
-    this.onGenreSelected,
-  });
+  const GenreList({super.key, this.selected = "All", this.onGenreSelected});
 
   @override
   Widget build(BuildContext context) {
@@ -44,7 +40,7 @@ class GenreList extends StatelessWidget {
             child: InkWell(
               borderRadius: BorderRadius.circular(screenWidth * 0.06),
               onTap: () {
-                // TODO: Update the selected genre and filter the anime list accordingly
+                onGenreSelected?.call(genre);
               },
               child: Container(
                 padding: EdgeInsets.symmetric(
@@ -74,7 +70,6 @@ class GenreList extends StatelessWidget {
             ),
           );
         }).toList(),
-
       ),
     );
   }
