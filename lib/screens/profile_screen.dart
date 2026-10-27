@@ -13,6 +13,9 @@ class ProfileScreen extends StatelessWidget {
     final screenWidth = MediaQuery.of(context).size.width;
     final screenHeight = MediaQuery.of(context).size.height;
 
+    // TODO: ganti dengan username asli dari data user
+    const username = '> <';
+
     return AppScaffold(
       appBar: AppBar(
         title: Text(
@@ -64,7 +67,7 @@ class ProfileScreen extends StatelessWidget {
 
                   // Display Name / Username
                   Text(
-                    '> <',
+                    username,
                     style: TextStyle(
                       fontSize: screenWidth * 0.055,
                       fontWeight: FontWeight.bold,
@@ -130,7 +133,7 @@ class ProfileScreen extends StatelessWidget {
               title: 'Change Username',
               subtitle: 'Update your display name',
               onTap: () {
-                // Static dummy function
+                context.push(AppRoutes.changeUsername, extra: username);
               },
             ),
 
@@ -142,7 +145,7 @@ class ProfileScreen extends StatelessWidget {
               title: 'Change Password',
               subtitle: 'Update your account password',
               onTap: () {
-                // Static dummy function
+                context.push(AppRoutes.changePassword);
               },
             ),
 
@@ -168,7 +171,7 @@ class ProfileScreen extends StatelessWidget {
               title: 'About AnimeVerse',
               subtitle: 'Version 1.0.0',
               onTap: () {
-                // Static dummy function
+                context.push(AppRoutes.about);
               },
             ),
 

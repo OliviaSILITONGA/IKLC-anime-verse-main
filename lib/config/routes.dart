@@ -1,3 +1,6 @@
+import 'package:anime_verse/screens/about_screen.dart';
+import 'package:anime_verse/screens/change_password_screen.dart';
+import 'package:anime_verse/screens/change_username_screen.dart';
 import 'package:anime_verse/screens/favorite_screen.dart';
 import 'package:anime_verse/screens/forgot_password_screen.dart';
 import 'package:anime_verse/screens/home_screen.dart';
@@ -19,6 +22,9 @@ class AppRoutes {
   static const String home = '/home';
   static const String favorites = '/favorites';
   static const String profile = '/profile';
+  static const String changeUsername = '/change-username';
+  static const String changePassword = '/change-password';
+  static const String about = '/about';
   static const String details = '/details';
 }
 
@@ -56,6 +62,28 @@ GoRouter createRouter() {
           final anime = DummyData.findById(animeId);
           return DetailScreen(anime: anime);
         },
+      ),
+
+      // Profile sub-pages (tampil full screen, di atas bottom navigation)
+      GoRoute(
+        path: AppRoutes.changeUsername,
+        name: 'change-username',
+        parentNavigatorKey: _rootNavigatorKey,
+        builder: (context, state) => ChangeUsernameScreen(
+          currentUsername: state.extra as String? ?? 'username',
+        ),
+      ),
+      GoRoute(
+        path: AppRoutes.changePassword,
+        name: 'change-password',
+        parentNavigatorKey: _rootNavigatorKey,
+        builder: (context, state) => const ChangePasswordScreen(),
+      ),
+      GoRoute(
+        path: AppRoutes.about,
+        name: 'about',
+        parentNavigatorKey: _rootNavigatorKey,
+        builder: (context, state) => const AboutScreen(),
       ),
 
       // 3. ShellRoute (Untuk Halaman yang menggunakan Bottom Navigation Bar)

@@ -90,29 +90,32 @@ class GenreFilterButton extends StatelessWidget {
                   runSpacing: screenHeight * 0.01,
                   children: kGenres.map((genre) {
                     final isActive = genre == selected;
-                    return ChoiceChip(
-                      label: Text(genre),
-                      selected: isActive,
-                      showCheckmark: false,
-                      onSelected: (_) {
-                        // Langsung tutup & terapkan, jadi tidak perlu tombol "Apply"
-                        Navigator.pop(sheetContext);
-                        onGenreSelected(genre);
-                      },
-                      labelStyle: TextStyle(
-                        fontSize: screenWidth * 0.038,
-                        fontWeight: FontWeight.w600,
-                        color: isActive ? Colors.white : Colors.white70,
-                      ),
-                      backgroundColor: Colors.white.withValues(alpha: 0.08),
-                      selectedColor: Colors.blue.withValues(alpha: 0.8),
-                      side: BorderSide.none,
-                      shape: RoundedRectangleBorder(
+                    return Material(
+                      color: isActive
+                          ? const Color(0xFF2196F3)
+                          : const Color(0xFF1B5E91),
+                      borderRadius: BorderRadius.circular(screenWidth * 0.06),
+                      child: InkWell(
                         borderRadius: BorderRadius.circular(screenWidth * 0.06),
-                      ),
-                      padding: EdgeInsets.symmetric(
-                        horizontal: screenWidth * 0.02,
-                        vertical: screenHeight * 0.005,
+                        onTap: () {
+                          // Langsung tutup & terapkan, jadi tidak perlu tombol "Apply"
+                          Navigator.pop(sheetContext);
+                          onGenreSelected(genre);
+                        },
+                        child: Padding(
+                          padding: EdgeInsets.symmetric(
+                            horizontal: screenWidth * 0.045,
+                            vertical: screenHeight * 0.01,
+                          ),
+                          child: Text(
+                            genre,
+                            style: TextStyle(
+                              fontSize: screenWidth * 0.038,
+                              fontWeight: FontWeight.w600,
+                              color: Colors.white,
+                            ),
+                          ),
+                        ),
                       ),
                     );
                   }).toList(),

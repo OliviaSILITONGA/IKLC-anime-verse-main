@@ -137,7 +137,8 @@ class _HomeScreenState extends State<HomeScreen> {
                       fontWeight: FontWeight.w600,
                       color: Colors.white,
                     ),
-                    backgroundColor: Colors.blue.withValues(alpha: 0.8),
+                    backgroundColor: const Color(0xFF2196F3),
+                    color: const WidgetStatePropertyAll(Color(0xFF2196F3)),
                     side: BorderSide.none,
                     deleteIconColor: Colors.white,
                     onDeleted: () {

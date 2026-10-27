@@ -28,10 +28,10 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
 
   String? _validateEmail(String? value) {
     if (value == null || value.trim().isEmpty) {
-      return 'Email wajib diisi';
+      return 'Email is required';
     }
     if (!_emailRegex.hasMatch(value.trim())) {
-      return 'Format email tidak valid';
+      return 'Invalid email format';
     }
     return null;
   }
@@ -43,7 +43,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
 
     try {
       // TODO: Implement send reset password email
-      // contoh (Firebase): await FirebaseAuth.instance
+      // example (Firebase): await FirebaseAuth.instance
       //     .sendPasswordResetEmail(email: _emailController.text.trim());
       await Future.delayed(const Duration(seconds: 1));
 
@@ -57,7 +57,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
       setState(() => _isLoading = false);
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
-          content: Text('Gagal mengirim link reset. Coba lagi.'),
+          content: Text('Failed to send reset link. Please try again.'),
           backgroundColor: Colors.redAccent,
         ),
       );
@@ -162,7 +162,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
           SizedBox(height: screenHeight * 0.01),
 
           Text(
-            'Masukkan email yang terdaftar dan kami akan\nmengirimkan link untuk mereset password kamu',
+            "Enter your registered email and we'll send you\na link to reset your password",
             style: TextStyle(
               fontSize: screenWidth * 0.035,
               fontWeight: FontWeight.w500,
@@ -264,7 +264,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Text(
-                'Ingat password kamu? ',
+                'Remember your password? ',
                 style: TextStyle(
                   fontSize: screenWidth * 0.04,
                   color: Colors.white70,
@@ -332,7 +332,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
         SizedBox(height: screenHeight * 0.015),
 
         Text(
-          'Kami sudah mengirim link reset password ke',
+          "We've sent a password reset link to",
           style: TextStyle(
             fontSize: screenWidth * 0.035,
             fontWeight: FontWeight.w500,
@@ -386,7 +386,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Text(
-              'Tidak menerima email? ',
+              "Didn't receive the email? ",
               style: TextStyle(
                 fontSize: screenWidth * 0.035,
                 color: Colors.white70,
@@ -395,7 +395,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
             TextButton(
               onPressed: () => setState(() => _emailSent = false),
               child: Text(
-                'Kirim ulang',
+                'Resend',
                 style: TextStyle(
                   fontSize: screenWidth * 0.035,
                   fontWeight: FontWeight.w600,
