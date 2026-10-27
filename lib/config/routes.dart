@@ -1,4 +1,5 @@
 import 'package:anime_verse/screens/favorite_screen.dart';
+import 'package:anime_verse/screens/forgot_password_screen.dart';
 import 'package:anime_verse/screens/home_screen.dart';
 import 'package:anime_verse/screens/profile_screen.dart';
 import 'package:anime_verse/screens/signin_screen.dart';
@@ -14,6 +15,7 @@ import '../screens/detail_screen.dart';
 class AppRoutes {
   static const String signIn = '/sign-in';
   static const String signUp = '/sign-up';
+  static const String forgotPassword = '/forgot-password';
   static const String home = '/home';
   static const String favorites = '/favorites';
   static const String profile = '/profile';
@@ -37,6 +39,11 @@ GoRouter createRouter() {
         path: AppRoutes.signUp,
         name: 'sign-up',
         builder: (context, state) => const SignUpScreen(),
+      ),
+      GoRoute(
+        path: AppRoutes.forgotPassword,
+        name: 'forgot-password',
+        builder: (context, state) => const ForgotPasswordScreen(),
       ),
 
       // 2. Detail Route

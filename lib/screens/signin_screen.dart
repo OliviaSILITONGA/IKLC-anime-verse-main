@@ -245,7 +245,7 @@ class _SignInScreenState extends State<SignInScreen> {
                             ),
                           ),
                           onPressed: () {
-                            // TODO: Implement forgot password functionality
+                            context.go(AppRoutes.forgotPassword);
                           },
                         ),
                       ),
